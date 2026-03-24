@@ -30,6 +30,7 @@ export default defineConfig({
                 'ws',
                 'node-llama-cpp',
                 /^@node-llama-cpp\//,
+                /^@napi-rs\//,
               ],
             },
           },
