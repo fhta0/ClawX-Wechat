@@ -31,6 +31,12 @@ jobs:
           node-version: "24"
           cache: "pnpm"
 
+      - name: Rewrite git@github.com to https
+        shell: bash
+        run: |
+          git config --global url."https://github.com/".insteadOf git@github.com:
+          git config --global url."https://github.com/".insteadOf ssh://git@github.com/
+
       - name: Install dependencies
         run: pnpm install
 
