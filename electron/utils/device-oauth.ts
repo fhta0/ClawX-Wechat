@@ -23,15 +23,25 @@ import { saveProvider, getProvider, ProviderConfig } from './secure-storage';
 import { getProviderDefaultModel } from './provider-registry';
 import { isOpenClawPresent } from './paths';
 import { proxyAwareFetch } from './proxy-fetch';
-import {
-    loginMiniMaxPortalOAuth,
-    type MiniMaxOAuthToken,
-    type MiniMaxRegion,
-} from '../../node_modules/openclaw/extensions/minimax-portal-auth/oauth';
-import {
-    loginQwenPortalOAuth,
-    type QwenOAuthToken,
-} from '../../node_modules/openclaw/extensions/qwen-portal-auth/oauth';
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+import { loginMiniMaxPortalOAuth } from '../../node_modules/openclaw/dist/extensions/minimax/oauth';
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+import { loginQwenPortalOAuth } from '../../node_modules/openclaw/dist/extensions/qwen-portal-auth/oauth';
+
+// Types inferred from openclaw dist (no .d.ts shipped)
+type MiniMaxRegion = 'global' | 'cn';
+interface MiniMaxOAuthToken {
+    access: string;
+    refresh: string;
+    expires: number;
+    resourceUrl?: string;
+}
+interface QwenOAuthToken {
+    access: string;
+    refresh: string;
+    expires: number;
+    resourceUrl?: string;
+}
 import { saveOAuthTokenToOpenClaw, setOpenClawDefaultModelWithOverride } from './openclaw-auth';
 
 export type OAuthProviderType = 'minimax-portal' | 'minimax-portal-cn' | 'qwen-portal';
