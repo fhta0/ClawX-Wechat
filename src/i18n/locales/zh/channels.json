@@ -98,6 +98,34 @@
         "saveAndConnect": "保存并连接",
         "envVar": "环境变量: {{var}}"
     },
+    "wechat": {
+        "name": "微信",
+        "pageTitle": "微信连接",
+        "connect": "扫码连接微信",
+        "connecting": "连接中...",
+        "waitingForScan": "等待扫码...",
+        "scanInstructions": "使用微信扫描下方二维码",
+        "qrExpiry": "二维码有效期 5 分钟，过期自动刷新",
+        "refreshQr": "刷新二维码",
+        "skip": "跳过，稍后设置",
+        "connected": "已连接",
+        "accountLabel": "账号：{{id}}",
+        "reconnect": "重新扫码",
+        "addAccount": "添加账号",
+        "disconnect": "断开连接",
+        "notConnected": "未连接",
+        "notConnectedDesc": "连接微信，让 AI 助手帮你处理消息",
+        "otherChannels": "其他渠道",
+        "errorTitle": "连接失败",
+        "retry": "重试",
+        "cancelPanel": "取消",
+        "error": {
+            "generic": "连接失败，请稍后重试",
+            "timeout": "二维码已过期，请刷新重试",
+            "plugin": "微信插件未就绪，请稍后重试",
+            "cancelled": "扫码已取消，请重新生成"
+        }
+    },
     "meta": {
         "telegram": {
             "description": "使用 @BotFather 提供的机器人令牌连接 Telegram",

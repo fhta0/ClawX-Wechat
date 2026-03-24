@@ -230,7 +230,14 @@ export function copyPluginFromNodeModules(npmPkgPath: string, targetDir: string,
   try {
     realPath = realpathSync(fsPath(npmPkgPath));
   } catch {
-    throw new Error(`Cannot resolve real path for ${npmPkgPath}`);
+    // On Windows, pnpm creates directory junctions that realpathSync may fail to
+    // resolve (especially with the \\?\ long-path prefix). Fall back to the
+    // original path if it actually exists on disk.
+    if (existsSync(fsPath(npmPkgPath))) {
+      realPath = npmPkgPath;
+    } else {
+      throw new Error(`Cannot resolve real path for ${npmPkgPath}`);
+    }
   }
 
   // 1. Copy plugin package itself
@@ -267,7 +274,14 @@ export function copyPluginFromNodeModules(npmPkgPath: string, targetDir: string,
       let depRealPath: string;
       try {
         depRealPath = realpathSync(fsPath(fullPath));
-      } catch { continue; }
+      } catch {
+        // On Windows, pnpm junctions fail realpathSync — use original path if it exists.
+        if (existsSync(fsPath(fullPath))) {
+          depRealPath = fullPath;
+        } else {
+          continue;
+        }
+      }
       if (collected.has(depRealPath)) continue;
       collected.set(depRealPath, name);
       const depVirtualNM = findParentNodeModules(depRealPath);
@@ -309,16 +323,31 @@ export function ensurePluginInstalled(
 
   // If already installed, check whether an upgrade is available
   if (existsSync(fsPath(targetManifest))) {
-    if (!sourceDir) return { installed: true }; // no bundled source to compare, keep existing
-    const installedVersion = readPluginVersion(targetPkgJson);
-    const sourceVersion = readPluginVersion(join(sourceDir, 'package.json'));
-    if (!sourceVersion || !installedVersion || sourceVersion === installedVersion) {
-      return { installed: true }; // same version or unable to compare
+    if (!sourceDir) {
+      // No bundled source to compare. In dev mode, still fall through if deps are missing.
+      if (app.isPackaged) return { installed: true };
+      const targetNM = join(targetDir, 'node_modules');
+      const depsPresent =
+        existsSync(fsPath(targetNM)) &&
+        readdirSync(fsPath(targetNM), { withFileTypes: true }).some(
+          (e) => (e.isDirectory() || e.isSymbolicLink()) && e.name !== '.bin',
+        );
+      if (depsPresent) return { installed: true };
+      logger.info(
+        `[plugin] ${pluginLabel}: deps missing from extensions node_modules, triggering reinstall`,
+      );
+      // fall through to dev-mode reinstall below
+    } else {
+      const installedVersion = readPluginVersion(targetPkgJson);
+      const sourceVersion = readPluginVersion(join(sourceDir, 'package.json'));
+      if (!sourceVersion || !installedVersion || sourceVersion === installedVersion) {
+        return { installed: true }; // same version or unable to compare
+      }
+      // Version differs — fall through to overwrite install
+      logger.info(
+        `[plugin] Upgrading ${pluginLabel} plugin: ${installedVersion} → ${sourceVersion}`,
+      );
     }
-    // Version differs — fall through to overwrite install
-    logger.info(
-      `[plugin] Upgrading ${pluginLabel} plugin: ${installedVersion} → ${sourceVersion}`,
-    );
   }
 
   // Fresh install or upgrade — try bundled/build sources first
@@ -374,7 +403,13 @@ export function ensurePluginInstalled(
       if (existsSync(fsPath(join(npmPkgPath, 'openclaw.plugin.json')))) {
         const installedVersion = existsSync(fsPath(targetPkgJson)) ? readPluginVersion(targetPkgJson) : null;
         const sourceVersion = readPluginVersion(join(npmPkgPath, 'package.json'));
-        if (sourceVersion && (!installedVersion || sourceVersion !== installedVersion)) {
+        const targetNM = join(targetDir, 'node_modules');
+        const depsPresent =
+          existsSync(fsPath(targetNM)) &&
+          readdirSync(fsPath(targetNM), { withFileTypes: true }).some(
+            (e) => (e.isDirectory() || e.isSymbolicLink()) && e.name !== '.bin',
+          );
+        if (sourceVersion && (!installedVersion || sourceVersion !== installedVersion || !depsPresent)) {
           logger.info(
             `[plugin] ${installedVersion ? 'Upgrading' : 'Installing'} ${pluginLabel} plugin` +
             `${installedVersion ? `: ${installedVersion} → ${sourceVersion}` : `: ${sourceVersion}`} (dev/node_modules)`,

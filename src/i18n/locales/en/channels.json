@@ -98,6 +98,34 @@
         "saveAndConnect": "Save & Connect",
         "envVar": "Environment Variable: {{var}}"
     },
+    "wechat": {
+        "name": "WeChat",
+        "pageTitle": "WeChat",
+        "connect": "Connect WeChat",
+        "connecting": "Connecting...",
+        "waitingForScan": "Waiting for scan...",
+        "scanInstructions": "Scan the QR code below with WeChat",
+        "qrExpiry": "QR code valid for 5 minutes, auto-refreshes when expired",
+        "refreshQr": "Refresh QR Code",
+        "skip": "Skip for now",
+        "connected": "Connected",
+        "accountLabel": "Account: {{id}}",
+        "reconnect": "Reconnect",
+        "addAccount": "Add Account",
+        "disconnect": "Disconnect",
+        "notConnected": "Not connected",
+        "notConnectedDesc": "Connect WeChat to let your AI assistant handle messages",
+        "otherChannels": "Other Channels",
+        "errorTitle": "Connection failed",
+        "retry": "Retry",
+        "cancelPanel": "Cancel",
+        "error": {
+            "generic": "Connection failed, please try again",
+            "timeout": "QR code has expired, please refresh",
+            "plugin": "WeChat plugin is not ready, please wait a moment",
+            "cancelled": "Scan was cancelled, please try again"
+        }
+    },
     "meta": {
         "telegram": {
             "description": "Connect Telegram using a bot token from @BotFather",

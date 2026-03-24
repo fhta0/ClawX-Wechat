@@ -98,6 +98,34 @@
         "saveAndConnect": "保存して接続",
         "envVar": "環境変数: {{var}}"
     },
+    "wechat": {
+        "name": "WeChat",
+        "pageTitle": "WeChat 接続",
+        "connect": "WeChat を接続",
+        "connecting": "接続中...",
+        "waitingForScan": "スキャン待ち...",
+        "scanInstructions": "WeChat で下の QR コードをスキャンしてください",
+        "qrExpiry": "QR コードは 5 分間有効で、有効期限が切れると自動更新されます",
+        "refreshQr": "QR コードを更新",
+        "skip": "後で設定する",
+        "connected": "接続済み",
+        "accountLabel": "アカウント: {{id}}",
+        "reconnect": "再接続",
+        "addAccount": "アカウントを追加",
+        "disconnect": "切断",
+        "notConnected": "未接続",
+        "notConnectedDesc": "WeChat を接続して AI アシスタントにメッセージを処理させましょう",
+        "otherChannels": "その他のチャンネル",
+        "errorTitle": "接続に失敗しました",
+        "retry": "再試行",
+        "cancelPanel": "キャンセル",
+        "error": {
+            "generic": "接続に失敗しました。しばらくしてから再試行してください",
+            "timeout": "QR コードの有効期限が切れました。更新してください",
+            "plugin": "WeChat プラグインの準備ができていません。しばらくお待ちください",
+            "cancelled": "スキャンがキャンセルされました。再試行してください"
+        }
+    },
     "meta": {
         "telegram": {
             "description": "@BotFather からのボットトークンを使用して Telegram に接続します",
