@@ -24,7 +24,13 @@ export default defineConfig({
           build: {
             outDir: 'dist-electron/main',
             rollupOptions: {
-              external: ['electron-store', 'electron-updater', 'ws'],
+              external: [
+                'electron-store',
+                'electron-updater',
+                'ws',
+                'node-llama-cpp',
+                /^@node-llama-cpp\//,
+              ],
             },
           },
         },
